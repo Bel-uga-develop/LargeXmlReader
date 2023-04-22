@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/Bel-uga-develop/XmlReader"
 )
 
 func main() {
-	reader := xmlReader.Reader{}
-	reader.SetFile("1.xml")
-	//reader.SetElement("sdnEntry")
+	reader := XmlReader.Reader{}
+	reader.SetFile("data.xml")
+	reader.SetElement("sdnEntry")
 
 	err := reader.Read(readFunc)
 	if err != nil {
