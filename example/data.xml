@@ -1,0 +1,55 @@
+<?xml version="1.0" standalone="yes"?>
+<sdnList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://tempuri.org/sdnList.xsd">
+  <publshInformation>
+    <Publish_Date>04/11/2023</Publish_Date>
+    <Record_Count>11973</Record_Count>
+  </publshInformation>
+  <sdnEntry>
+    <uid>36</uid>
+    <lastName>AEROCARIBBEAN AIRLINES</lastName>
+    <sdnType>Entity</sdnType>
+    <programList>
+      <program>CUBA</program>
+    </programList>
+    <akaList>
+      <aka>
+        <uid>12</uid>
+        <type>a.k.a.</type>
+        <category>strong</category>
+        <lastName>AERO-CARIBBEAN</lastName>
+      </aka>
+    </akaList>
+    <addressList>
+      <address>
+        <uid>25</uid>
+        <city>Havana</city>
+        <country>Cuba</country>
+      </address>
+    </addressList>
+  </sdnEntry>
+  <sdnEntry>
+    <uid>173</uid>
+    <lastName>ANGLO-CARIBBEAN CO., LTD.</lastName>
+    <sdnType>Entity</sdnType>
+    <programList>
+      <program>CUBA</program>
+    </programList>
+    <akaList>
+      <aka>
+        <uid>57</uid>
+        <type>a.k.a.</type>
+        <category>strong</category>
+        <lastName>AVIA IMPORT</lastName>
+      </aka>
+    </akaList>
+    <addressList>
+      <address>
+        <uid>129</uid>
+        <address1>Ibex House, The Minories</address1>
+        <city>London</city>
+        <postalCode>EC3N 1DY</postalCode>
+        <country>United Kingdom</country>
+      </address>
+    </addressList>
+  </sdnEntry>
+</sdnList>

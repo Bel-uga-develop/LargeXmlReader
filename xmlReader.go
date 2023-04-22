@@ -1,4 +1,4 @@
-package xmlReader
+package XmlReader
 
 import (
 	"bufio"
