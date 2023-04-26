@@ -1,11 +1,41 @@
 package main
 
 import (
+	"bufio"
 	"encoding/xml"
+	"errors"
 	"fmt"
-
-	"github.com/Bel-uga-develop/XmlReader"
+	"os"
+	"strings"
+	"time"
 )
+
+type userDate time.Time
+
+const userDateFormat = "02/01/2006"
+
+func (ud *userDate) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	dateString := ""
+	err := d.DecodeElement(&dateString, &start)
+	if err != nil {
+		return err
+	}
+	dat, err := time.Parse(userDateFormat, dateString)
+	if err != nil {
+		return err
+	}
+	*ud = userDate(dat)
+	return nil
+}
+
+func (ud userDate) String() string {
+	return time.Time(ud).Format(time.RFC850)
+}
+
+type PublshInformation struct {
+	PublishDate userDate `xml:"Publish_Date"`
+	RecordCount int      `xml:"Record_Count"`
+}
 
 type SdnEntry struct {
 	Uid         int         `xml:"uid"`
@@ -44,9 +74,9 @@ type Address struct {
 }
 
 func main() {
-	reader := XmlReader.Reader{}
+	reader := Reader{}
 	reader.SetFile("data.xml")
-	reader.SetElement("sdnEntry")
+	reader.SetElements([]string{"sdnEntry", "publshInformation"})
 
 	err := reader.Read(readFunc)
 	if err != nil {
@@ -54,14 +84,29 @@ func main() {
 	}
 }
 
-func readFunc(element string) error {
-	sdnEntry := &SdnEntry{}
-	err := xml.Unmarshal([]byte(element), &sdnEntry)
-
-	if err != nil {
-		fmt.Println(err)
+func readFunc(elementName string, element string) error {
+	switch elementName {
+	case "sdnEntry":
+		{
+			sdnEntry := &SdnEntry{}
+			err := xml.Unmarshal([]byte(element), &sdnEntry)
+			if err != nil {
+				fmt.Println(err)
+				return err
+			}
+			fmt.Println(sdnEntry)
+		}
+	case "publshInformation":
+		{
+			publshInformation := &PublshInformation{}
+			err := xml.Unmarshal([]byte(element), &publshInformation)
+			if err != nil {
+				fmt.Println(err)
+				return err
+			}
+			fmt.Println(publshInformation)
+		}
 	}
-	fmt.Println(sdnEntry)
 	fmt.Println("--------------------------------------")
 	return nil
 }

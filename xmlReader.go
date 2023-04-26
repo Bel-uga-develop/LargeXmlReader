@@ -1,3 +1,4 @@
+// Package for reading large xml files line by line
 package XmlReader
 
 import (
@@ -8,19 +9,28 @@ import (
 )
 
 type Reader struct {
-	fileName    string
-	elementName string
+	fileName string
+	elements []string
 }
 
+// Function to specify xml file
 func (reader *Reader) SetFile(fileName string) {
 	reader.fileName = fileName
 }
 
+// Function to specify xml element for loop
 func (reader *Reader) SetElement(elementName string) {
-	reader.elementName = elementName
+
+	reader.elements = []string{elementName}
 }
 
-func (reader *Reader) Read(callBack func(string) error) error {
+// Function to specify xml elements for loop
+func (reader *Reader) SetElements(elements []string) {
+	reader.elements = elements
+}
+
+// Reading a xml file line by line
+func (reader *Reader) Read(callBack func(string, string) error) error {
 	file, err := os.Open(reader.fileName)
 	if err != nil {
 		return err
@@ -28,25 +38,38 @@ func (reader *Reader) Read(callBack func(string) error) error {
 
 	defer file.Close()
 
-	if reader.elementName == "" {
+	if reader.elements == nil {
 		return errors.New("Set value of element: SetElement()")
 	}
 
 	scanner := bufio.NewScanner(file)
 	element := ""
-
+	elementName := ""
 	for scanner.Scan() {
-		if strings.Contains(scanner.Text(), "<"+reader.elementName+">") {
-			element = scanner.Text()
-		} else if strings.Contains(scanner.Text(), "</"+reader.elementName+">") {
-			element += scanner.Text()
-			err = callBack(element)
-			if err != nil {
-				return err
+		if element == "" {
+			for _, item := range reader.elements {
+				if strings.Contains(scanner.Text(), "<"+item+">") {
+					element = scanner.Text()
+					elementName = item
+					break
+				}
 			}
-			element = ""
 		} else if element != "" {
-			element += scanner.Text()
+			for _, item := range reader.elements {
+				if strings.Contains(scanner.Text(), "</"+item+">") {
+					element += scanner.Text()
+					err = callBack(elementName, element)
+					if err != nil {
+						return err
+					}
+					element = ""
+					elementName = ""
+					break
+				}
+			}
+			if element != "" {
+				element += scanner.Text()
+			}
 		}
 	}
 
