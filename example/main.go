@@ -1,13 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"encoding/xml"
-	"errors"
 	"fmt"
-	"os"
-	"strings"
 	"time"
+
+	"github.com/Bel-uga-develop/XmlReader"
 )
 
 type userDate time.Time
@@ -74,7 +72,7 @@ type Address struct {
 }
 
 func main() {
-	reader := Reader{}
+	reader := XmlReader.Reader{}
 	reader.SetFile("data.xml")
 	reader.SetElements([]string{"sdnEntry", "publshInformation"})
 
