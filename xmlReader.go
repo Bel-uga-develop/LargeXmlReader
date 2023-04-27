@@ -3,9 +3,9 @@ package XmlReader
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"os"
-	"strings"
 )
 
 type Reader struct {
@@ -39,36 +39,38 @@ func (reader *Reader) Read(callBack func(string, string) error) error {
 	defer file.Close()
 
 	if reader.elements == nil {
-		return errors.New("Set value of element: SetElement()")
+		return errors.New("set value of element: SetElement()")
 	}
 
 	scanner := bufio.NewScanner(file)
-	element := ""
+	element := [][]byte{}
 	elementName := ""
 	for scanner.Scan() {
-		if element == "" {
+		row := scanner.Bytes()
+		if len(element) == 0 {
 			for _, item := range reader.elements {
-				if strings.Contains(scanner.Text(), "<"+item+">") {
-					element = scanner.Text()
+				if bytes.Contains(row, []byte("<"+item+">")) {
+					element = append(element, row)
 					elementName = item
 					break
 				}
 			}
-		} else if element != "" {
+		} else if len(element) != 0 {
 			for _, item := range reader.elements {
-				if strings.Contains(scanner.Text(), "</"+item+">") {
-					element += scanner.Text()
-					err = callBack(elementName, element)
+				if bytes.Contains(row, []byte("</"+item+">")) {
+					element = append(element, row)
+					str := bytes.Join(element, []byte(""))
+					err = callBack(elementName, string(str[:]))
 					if err != nil {
 						return err
 					}
-					element = ""
+					element = [][]byte{}
 					elementName = ""
 					break
 				}
 			}
-			if element != "" {
-				element += scanner.Text()
+			if len(element) != 0 {
+				element = append(element, row)
 			}
 		}
 	}
