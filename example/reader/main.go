@@ -82,12 +82,12 @@ func main() {
 	}
 }
 
-func readFunc(elementName string, element string) error {
+func readFunc(elementName string, element []byte) error {
 	switch elementName {
 	case "sdnEntry":
 		{
 			sdnEntry := &SdnEntry{}
-			err := xml.Unmarshal([]byte(element), &sdnEntry)
+			err := xml.Unmarshal(element, &sdnEntry)
 			if err != nil {
 				fmt.Println(err)
 				return err
@@ -97,7 +97,7 @@ func readFunc(elementName string, element string) error {
 	case "publshInformation":
 		{
 			publshInformation := &PublshInformation{}
-			err := xml.Unmarshal([]byte(element), &publshInformation)
+			err := xml.Unmarshal(element, &publshInformation)
 			if err != nil {
 				fmt.Println(err)
 				return err

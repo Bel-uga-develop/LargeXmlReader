@@ -30,7 +30,7 @@ func (reader *Reader) SetElements(elements []string) {
 }
 
 // Reading a xml file line by line
-func (reader *Reader) Read(callBack func(string, string) error) error {
+func (reader *Reader) Read(callBack func(string, []byte) error) error {
 	file, err := os.Open(reader.fileName)
 	if err != nil {
 		return err
@@ -43,34 +43,34 @@ func (reader *Reader) Read(callBack func(string, string) error) error {
 	}
 
 	scanner := bufio.NewScanner(file)
-	element := [][]byte{}
+	elementSlice := [][]byte{}
 	elementName := ""
 	for scanner.Scan() {
 		row := scanner.Bytes()
-		if len(element) == 0 {
+		if len(elementSlice) == 0 {
 			for _, item := range reader.elements {
 				if bytes.Contains(row, []byte("<"+item+">")) {
-					element = append(element, row)
+					elementSlice = append(elementSlice, row)
 					elementName = item
 					break
 				}
 			}
-		} else if len(element) != 0 {
+		} else if len(elementSlice) != 0 {
 			for _, item := range reader.elements {
 				if bytes.Contains(row, []byte("</"+item+">")) {
-					element = append(element, row)
-					str := bytes.Join(element, []byte(""))
-					err = callBack(elementName, string(str[:]))
+					elementSlice = append(elementSlice, row)
+					byteElement := bytes.Join(elementSlice, []byte(""))
+					err = callBack(elementName, byteElement)
 					if err != nil {
 						return err
 					}
-					element = [][]byte{}
+					elementSlice = [][]byte{}
 					elementName = ""
 					break
 				}
 			}
-			if len(element) != 0 {
-				element = append(element, row)
+			if len(elementSlice) != 0 {
+				elementSlice = append(elementSlice, row)
 			}
 		}
 	}
