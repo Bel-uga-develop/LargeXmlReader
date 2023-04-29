@@ -2,9 +2,10 @@ package test
 
 import (
 	"encoding/xml"
-	"github.com/Bel-uga-develop/XmlReader"
 	"testing"
 	"time"
+
+	"github.com/Bel-uga-develop/XmlReader"
 )
 
 func TestSetFile(t *testing.T) {
@@ -46,7 +47,7 @@ func TestReadElement(t *testing.T) {
 	}
 }
 
-func readFunc(elementName string, element string) error {
+func readFunc(elementName string, element []byte) error {
 	switch elementName {
 	case "sdnEntry":
 		{
