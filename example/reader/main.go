@@ -72,7 +72,7 @@ type Address struct {
 }
 
 func main() {
-	reader := XmlReader.Reader{}
+	reader := &XmlReader.Reader{}
 	reader.SetFile("data.xml")
 	reader.SetElements([]string{"sdnEntry", "publshInformation"})
 

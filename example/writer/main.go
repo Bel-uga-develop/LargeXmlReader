@@ -1,11 +1,15 @@
 package main
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/Bel-uga-develop/XmlReader"
+)
 
 func main() {
-	writer := &Writer{}
+	writer := &XmlReader.Writer{}
 	writer.Create("1.xml")
-	for i := 0; i < 100000000; i++ {
+	for i := 0; i < 10; i++ {
 		writer.Write([]byte("<element>\n"))
 		writer.Write([]byte(strconv.Itoa(i) + "\n"))
 		writer.Write([]byte("</element>\n"))
