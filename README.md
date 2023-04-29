@@ -1,5 +1,5 @@
 # Large Xml Reader Golang 
-Package for reading large xml files line by line
+Package for reading and writing large xml files line by line
 
 ## Installation
 ```

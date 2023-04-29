@@ -7,7 +7,8 @@ import (
 )
 
 type Writer struct {
-	file *os.File
+	file   *os.File
+	writer *bufio.Writer
 }
 
 // Create xml file
@@ -22,7 +23,7 @@ func (writer *Writer) Create(fileName string) error {
 		return err
 	}
 	writer.file = file
-
+	writer.writer = bufio.NewWriter(writer.file)
 	return nil
 }
 
@@ -36,8 +37,13 @@ func (writer *Writer) Close() error {
 
 // Write data
 func (writer *Writer) Write(data []byte) error {
-	w := bufio.NewWriter(writer.file)
-	w.Write(data)
-	w.Flush()
+	if _, err := writer.writer.Write(data); err != nil {
+		return err
+	}
+
+	if err := writer.writer.Flush(); err != nil {
+		return err
+	}
+
 	return nil
 }
