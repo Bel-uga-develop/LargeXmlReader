@@ -17,13 +17,17 @@ func main() {
 	if err := writer.Create("1.xml"); err != nil {
 		fmt.Println(err)
 	}
-
-	data1 := &PublshInformation{
+	xmldata := &PublshInformation{
 		Publish:     "test",
 		RecordCount: 1,
 	}
 
-	data, _ := xml.MarshalIndent(data1, " ", " ")
+	data, _ := xml.MarshalIndent(xmldata, " ", " ")
+
+	if err := writer.Write([]byte(xml.Header)); err != nil {
+		fmt.Println(err)
+	}
+
 	if err := writer.Write([]byte(data)); err != nil {
 		fmt.Println(err)
 	}
